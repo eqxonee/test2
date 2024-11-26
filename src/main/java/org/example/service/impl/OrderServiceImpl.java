@@ -3,7 +3,7 @@ package org.example.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.model.Order;
-import org.example.dto.OrderDto;
+//import org.example.dto.OrderDto;
 import org.example.repository.OrderRepository;
 import org.example.service.OrderService;
 import org.example.util.FileOutputStreamUtil;
@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
 
-    @Transactional
+/*    @Transactional
     @Override
     public List<OrderDto> getAllOrders() throws RuntimeException {
 
@@ -117,5 +117,5 @@ public class OrderServiceImpl implements OrderService {
 
         return order.stream().map(orders -> modelMapper.map(orders, OrderDto.class))
                 .collect(Collectors.toList());
-    }
+    }*/
 }

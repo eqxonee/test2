@@ -1,15 +1,19 @@
 package org.example.api;
 
+import com.example.generated.api.OrdersApi;
+import com.example.generated.model.OrderDto;
 import org.example.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.example.dto.OrderDto;
+import org.springframework.web.context.request.NativeWebRequest;
+//import org.example.dto.OrderDto;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class OrderApiController implements OrdersApi {
@@ -18,37 +22,74 @@ public class OrderApiController implements OrdersApi {
     private OrderService ordersService;
 
     @Override
+    public Optional<NativeWebRequest> getRequest() {
+        return OrdersApi.super.getRequest();
+    }
+
+    @Override
+    public ResponseEntity<OrderDto> addNew(OrderDto orderDto) {
+        return OrdersApi.super.addNew(orderDto);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteById(Integer id) {
+        return OrdersApi.super.deleteById(id);
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDto>> getAllByDateAndSum(OffsetDateTime date, Double sum) {
+        return OrdersApi.super.getAllByDateAndSum(date, sum);
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDto>> getAllByName(String name) {
+        return OrdersApi.super.getAllByName(name);
+    }
+
+    @Override
     public ResponseEntity<List<OrderDto>> getAllOrders() {
-        return ResponseEntity.ok(ordersService.getAllOrders());
-    }
-
-    @Override
-    public ResponseEntity<List<OrderDto>>getAllByName(String name) {
-        return ResponseEntity.ok(ordersService.getAllOrdersByName(name));
-    }
-
-    @Override
-    public ResponseEntity<List<OrderDto>> getAllByDateAndSum(Timestamp date, BigDecimal sum) {
-        return ResponseEntity.ok(ordersService.getAllByDateAndSum(date, sum));
+        return OrdersApi.super.getAllOrders();
     }
 
     @Override
     public ResponseEntity<List<OrderDto>> getAllWithoutProductAndDate(String productName, OffsetDateTime date) {
-        return ResponseEntity.ok(ordersService.getAllWithoutProductAndDate(productName,
-                Timestamp.valueOf(date.toLocalDateTime())));
+        return OrdersApi.super.getAllWithoutProductAndDate(productName, date);
+    }
+
+
+    /*    @Override
+    public ResponseEntity<OrderDto> addNew(OrderDto orderDto) {
+        return null;
     }
 
     @Override
-    public void addNew(OrderDto orderDto) {
-        ordersService.saveOrders(orderDto);
+    public ResponseEntity<Void> deleteById(Integer id) {
+        return null;
     }
 
     @Override
-    public void deleteById(Long id) {
-        ordersService.deleteById(id);
+    public ResponseEntity<List<OrderDto>> getAllByDateAndSum(OffsetDateTime date, Double sum) {
+        return null;
     }
 
-//    @Autowired
+    @Override
+    public ResponseEntity<List<OrderDto>> getAllByName(String name) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDto>> getAllOrders() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDto>> getAllWithoutProductAndDate(String productName, OffsetDateTime date) {
+        return null;
+    }*/
+
+
+
+    //    @Autowired
 //    private OrderService orderService;
 //
 //    @Override
