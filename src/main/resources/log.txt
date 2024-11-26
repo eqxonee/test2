@@ -1,19 +1,7 @@
-Logger[org.example.service.impl.OrderServiceImpl]successfully saved order
 
 successfully saved order
-select * from orders where recipient = '22'
-Select * from order
-Select * from order
-select * from orders_details
-Select * from order
-Select * from orders where id not in (Select id from order_details 
-where product_name = 'Car') and order_date = '2024-11-15 02:01:48.0'
-Select * from orders where order_date = '2024-11-15 02:01:48.0' and order_summ >= '1.9'
-Select * from orders where order_date = '2024-11-15 02:01:48.0' and order_summ >= '1.9'
-Select * from orders where id not in (Select id from order_details 
-where product_name = 'Car') and order_date = '2024-11-15 02:01:48.0'
-Select * from orders where order_date = '2024-11-15 02:01:48.0' and order_summ >= '1.9'
 
-Select * from orders where id not in (Select id from order_details 
-where product_name = 'Car') and order_date = '2024-11-15 02:01:48.0'
+select * from orders where recipient = 'Dmitry'
+
+select * from orders where recipient = 'Dmitry'
 

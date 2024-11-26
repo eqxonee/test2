@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: Orders Service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1/
+
+paths:
+  /orders:
+    get:
+      tags:
+        - orders
+      summary: Получение всех заказов или заказа по имени
+      operationId: getAllOrders
+      responses:
+        '200':
+          description: Запрос успешно выполнен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '404':
+          description: Заказ не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+    post:
+      tags:
+        - orders
+      summary: Создание нового заказа
+      operationId: addNew
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDto'
+      responses:
+        '201':
+          description: Заказ успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDto'
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /orders/{id}:
+    delete:
+      tags:
+        - orders
+      summary: Удаление заказа по ID
+      operationId: deleteById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID заказа
+      responses:
+        '204':
+          description: Заказ успешно удален
+        '404':
+          description: Заказ не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /orders/{date}/{sum}:
+    get:
+      tags:
+        - orders
+      summary: Получение заказов по дате и сумме
+      operationId: getAllByDateAndSum
+      parameters:
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Дата заказа в формате ISO 8601 (например, 2024-11-25T23:47:09.740Z)
+        - name: sum
+          in: path
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Сумма заказа
+      responses:
+        '200':
+          description: Заказы успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '404':
+          description: Заказы не найдены
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /orders/filter/{productName}/{date}:
+    get:
+      tags:
+        - orders
+      summary: Получение заказов по имени продукта и дате
+      operationId: getAllWithoutProductAndDate
+      parameters:
+        - name: productName
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Имя продукта
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Дата заказа в формате ISO 8601 (например, 2024-11-25T23:47:09.740Z)
+      responses:
+        '200':
+          description: Заказы успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '404':
+          description: Заказы не найдены
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /orders/{name}:
+    get:
+      tags:
+        - orders
+      summary: Получение всех заказов по имени
+      operationId: getAllByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Название заказа
+      responses:
+        '200':
+          description: Запрос успешно выполнен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '404':
+          description: Заказ не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    ID:
+      description: Уникальный идентификатор
+      type: integer
+      format: int64
+
+    OrderDto:
+      description: Информация о заказе
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        orderNumber:
+          type: string
+          description: Номер заказа
+        orderSum:
+          type: number
+          format: double
+          description: Общая сумма заказа
+        orderDate:
+          type: string
+          format: date-time
+          description: Дата заказа
+        recipient:
+          type: string
+          description: Получатель
+        deliveryAddress:
+          type: string
+          description: Адрес доставки
+        paymentType:
+          type: string
+          description: Тип оплаты (карта, наличные)
+        deliveryType:
+          type: string
+          description: Тип доставки (самовывоз, доставка до двери)

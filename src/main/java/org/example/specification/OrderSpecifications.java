@@ -8,12 +8,21 @@ import java.sql.Timestamp;
 
 public class OrderSpecifications {
 
-    public static Specification<Order> filterByDateAndSum(Timestamp date, BigDecimal sum) {
+    public static Specification<Order> filterByDate(Timestamp date) {
         return ((root, query, criteriaBuilder) -> {
-                if(date == null || sum == null) {
+                if(date == null) {
                     return criteriaBuilder.conjunction();
                 }
-                return root.join("order_date").get("id").in(date, sum);
+                return root.join("order_date").in(date);
+        });
+    }
+
+    public static Specification<Order> filterBySum(BigDecimal sum) {
+        return ((root, query, criteriaBuilder) -> {
+            if(sum == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return root.join("order_summ").in(sum);
         });
     }
 }

@@ -2,8 +2,8 @@ package org.example.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.OrderDto;
 import org.example.model.Order;
+import org.example.dto.OrderDto;
 import org.example.repository.OrderRepository;
 import org.example.service.OrderService;
 import org.example.util.FileOutputStreamUtil;
@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
         List<Order> order = orderRepository.findAll();
         log.debug("Request to get all Orders");
 
-        FileOutputStreamUtil.fileOutputStream("Select * from order\n\n");
+//        FileOutputStreamUtil.fileOutputStream("Select * from order\n\n");
 
         return order.stream().map(orders -> modelMapper.map(orders, OrderDto.class))
                 .collect(Collectors.toList());
