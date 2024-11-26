@@ -1,8 +1,8 @@
 package org.example.service.impl;
 
+import com.example.generated.model.OrderDetailsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.OrderDetailsDto;
 import org.example.model.OrderDetails;
 import org.example.repository.OrderDetailsRepository;
 import org.example.service.OrderDetailsService;
@@ -10,10 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

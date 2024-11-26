@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.dto.OrderDetailsDto;
+import com.example.generated.model.OrderDetailsDto;
 
 import java.util.List;
 

@@ -30,7 +30,7 @@ paths:
       tags:
         - orders
       summary: Создание нового заказа
-      operationId: addNew
+      operationId: saveOrder
       requestBody:
         required: true
         content:
@@ -40,10 +40,6 @@ paths:
       responses:
         '201':
           description: Заказ успешно создан
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderDto'
         '400':
           description: Неверный запрос
         '500':
@@ -61,6 +57,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
           description: ID заказа
       responses:
         '204':
@@ -151,7 +148,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Название заказа
+          description: Имя получателя
       responses:
         '200':
           description: Запрос успешно выполнен
@@ -165,6 +162,68 @@ paths:
           description: Заказ не найден
         '500':
           description: Внутренняя ошибка сервера
+
+  /orderDetails:
+    get:
+      tags:
+        - orderDetails
+      summary: Получение всех деталей заказов
+      operationId: getAllOrderDetails
+      responses:
+        '200':
+          description: Запрос успешно выполнен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDetailsDto'
+        '404':
+          description: Продукт не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+    post:
+      tags:
+        - orderDetails
+      summary: Создание нового продукта
+      operationId: saveOrderDetails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDetailsDto'
+      responses:
+        '201':
+          description: Продукт успешно создан
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /orderDetails/{id}:
+    delete:
+      tags:
+        - orderDetails
+      summary: Удаление продукта по ID
+      operationId: deleteProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID продукта
+      responses:
+        '204':
+          description: Продукт успешно удален
+        '404':
+          description: Продукт не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
 
 components:
   schemas:
@@ -201,3 +260,27 @@ components:
         deliveryType:
           type: string
           description: Тип доставки (самовывоз, доставка до двери)
+
+    OrderDetailsDto:
+      description: Информация о продукте
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        productCode:
+          type: number
+          format: int64
+          description: Артикул товара
+        productName:
+          type: string
+          description: Название товара
+        quantity:
+          type: number
+          description: Количество
+        unitCost:
+          type: number
+          format: double
+          description: Стоимость единицы товара
+        orderId:
+          type: number
+          format: int64
+          description: ID заказа

@@ -5,3 +5,13 @@ select * from orders where recipient = 'Dmitry'
 
 select * from orders where recipient = 'Dmitry'
 
+select * from orders where recipient = 'Dmitry'
+
+select * from orders where recipient = 'Ale*'
+
+select * from orders where recipient = 'Aleksey'
+
+select * from orders where recipient = 'Alexey'
+
+select * from orders where recipient = 'Sasha2'
+
