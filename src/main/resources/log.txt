@@ -15,3 +15,11 @@ select * from orders where recipient = 'Alexey'
 
 select * from orders where recipient = 'Sasha2'
 
+
+successfully saved order
+
+Select * from orders where order_date = '2024-11-15T02:01:48Z' and order_summ >= '1.9'
+
+Select * from orders where id not in (Select id from order_details 
+where product_name = 'Car') and order_date = '2024-11-15T02:01:48Z'
+

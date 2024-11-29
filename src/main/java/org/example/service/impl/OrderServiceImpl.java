@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderDto> getAllByDateAndSum(Timestamp date, BigDecimal sum) {
+    public List<OrderDto> getAllByDateAndSum(OffsetDateTime date, BigDecimal sum) {
         if (date == null || sum == null) {
             throw new RuntimeException("Поля 'Дата' и 'Сумма заказа' не должны быть пустыми");
         }
@@ -104,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderDto> getAllWithoutProductAndDate(String productName, Timestamp date) {
+    public List<OrderDto> getAllWithoutProductAndDate(String productName, OffsetDateTime date) {
         if (productName.isEmpty() || date == null) {
             throw new RuntimeException("Поля 'Название продукта' и 'Дата' не должны быть пустыми");
         }

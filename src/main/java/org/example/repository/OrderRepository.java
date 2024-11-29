@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Repository
@@ -17,9 +17,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     List<Order> getAllByRecipient(String name);
 
     @Query(value = "Select * from orders where order_date = :date and order_summ >= :sum", nativeQuery = true)
-    List<Order> getAllByDateAndSum(@Param("date") Timestamp date, @Param("sum") BigDecimal sum);
+    List<Order> getAllByDateAndSum(@Param("date") OffsetDateTime date, @Param("sum") BigDecimal sum);
 
     @Query(value = "Select * from orders where id not in (Select id from order_details "
            + "where product_name = :detailsName) and order_date = :date", nativeQuery = true)
-    List<Order> getAllWithoutProductAndDate(@Param("detailsName") String detailsName, @Param("date") Timestamp date);
+    List<Order> getAllWithoutProductAndDate(@Param("detailsName") String detailsName, @Param("date") OffsetDateTime date);
 }
