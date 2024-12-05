@@ -267,20 +267,21 @@ components:
         id:
           $ref: '#/components/schemas/ID'
         productCode:
-          type: number
+          type: integer
           format: int64
           description: Артикул товара
         productName:
           type: string
           description: Название товара
         quantity:
-          type: number
+          type: integer
+          format: int32
           description: Количество
         unitCost:
           type: number
           format: double
           description: Стоимость единицы товара
         orderId:
-          type: number
+          type: integer
           format: int64
           description: ID заказа

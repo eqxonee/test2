@@ -13,7 +13,7 @@
     <groupId>com.example</groupId>
     <artifactId>test2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>test2</name>
     <description>test2</description>
     <properties>

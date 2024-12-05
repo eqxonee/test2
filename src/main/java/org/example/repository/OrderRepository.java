@@ -22,4 +22,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query(value = "Select * from orders where id not in (Select id from order_details "
            + "where product_name = :detailsName) and order_date = :date", nativeQuery = true)
     List<Order> getAllWithoutProductAndDate(@Param("detailsName") String detailsName, @Param("date") OffsetDateTime date);
+
+    boolean existsByOrderNumber(String orderNumber);
 }

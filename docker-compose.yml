@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:alpine3.18
+    container_name: db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=java_pas_db
+      - POSTGRES_USER=java_pas_user
+      - POSTGRES_PASSWORD=12345
+
+  app:
+    build:
+      context: /Users/airm1/IdeaProjects/test2
+      dockerfile: Dockerfile
+    image: test2
+    container_name: test2
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://83.147.246.87:5432/postgres?currentSchema=public
+      - POSTGRES_USER=java_pas_user
+      - POSTGRES_PASSWORD=12345
+      - DRIVER_CLASS_NAME=org.postgresql.Driver
+
+  mongoService:
+    build:
+      context: /Users/airm1/IdeaProjects/mongoService
+      dockerfile: DockerfileMongoService
+    image: mongo-service
+    container_name: mongo-service
+    ports:
+      - "8040:8040"
+    depends_on:
+      - db
+      - app

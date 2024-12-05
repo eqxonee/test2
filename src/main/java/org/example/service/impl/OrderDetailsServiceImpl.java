@@ -29,14 +29,6 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         List<OrderDetails> orderDetail = orderDetailsRepository.findAll();
         log.debug("Request to get all Orders");
 
-//        File file = new File("/Users/airm1/IdeaProjects/test2/src/main/resources/log.txt");
-//        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true)) {
-//            String log = ("select * from orders_details\n");
-//            fileOutputStream.write(log.getBytes(StandardCharsets.UTF_8));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
         return orderDetail.stream().map(orders -> modelMapper.map(orders, OrderDetailsDto.class))
                 .collect(Collectors.toList());
     }

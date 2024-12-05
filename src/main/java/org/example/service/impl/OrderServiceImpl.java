@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.model.Order;
 import org.example.repository.OrderRepository;
 import org.example.service.OrderService;
-import org.example.util.FileOutputStreamUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -24,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
+    private final RestTemplate restTemplate;
 
     @Transactional
     @Override
@@ -31,8 +32,6 @@ public class OrderServiceImpl implements OrderService {
 
         List<Order> order = orderRepository.findAll();
         log.debug("Request to get all Orders");
-
-//        FileOutputStreamUtil.fileOutputStream("Select * from order\n\n");
 
         return order.stream().map(orders -> modelMapper.map(orders, OrderDto.class))
                 .collect(Collectors.toList());
@@ -44,9 +43,6 @@ public class OrderServiceImpl implements OrderService {
 
         List<Order> order = orderRepository.getAllByRecipient(name);
         log.debug("Request to get all Orders with recipient: {}", name);
-        String log = String.format("select * from orders where recipient = '%s'\n\n", name);
-
-        FileOutputStreamUtil.fileOutputStream(log);
 
         return order.stream().map(orders -> modelMapper.map(orders, OrderDto.class))
                 .collect(Collectors.toList());
@@ -58,13 +54,20 @@ public class OrderServiceImpl implements OrderService {
         if (dto.getId() == null) {
             //Новая запись
             try {
+                String newCode;
+                boolean isUnique;
+                do {
+                    newCode = getNewCode();
+                    isUnique = isCodeUnique(newCode);
+                } while (!isUnique);
+
                 Order order = modelMapper.map(dto, Order.class);
+                order.setOrderNumber(getNewCode());
+                order.setOrderDate(getDateNow());
                 orderRepository.save(order);
                 log.debug("successfully saved order\n");
-                FileOutputStreamUtil.fileOutputStream("\nsuccessfully saved order\n\n");
             } catch (RuntimeException ex) {
                 log.error(ex.getMessage());
-                FileOutputStreamUtil.fileOutputStream(log + ex.getMessage());
             }
         } else {
             //Обновляем существующую
@@ -94,9 +97,6 @@ public class OrderServiceImpl implements OrderService {
         }
         List<Order> order = orderRepository.getAllByDateAndSum(date, sum);
         log.debug("Request to get all Orders by date and sum: {}, {}", date, sum);
-        String log = String.format("Select * from orders where order_date = '%s' and order_summ >= '%s'\n\n", date, sum);
-
-        FileOutputStreamUtil.fileOutputStream(log);
 
         return order.stream().map(orders -> modelMapper.map(orders, OrderDto.class))
                 .collect(Collectors.toList());
@@ -110,12 +110,35 @@ public class OrderServiceImpl implements OrderService {
         }
         List<Order> order = orderRepository.getAllWithoutProductAndDate(productName, date);
         log.debug("Request to get all Orders without product and date: {}, {}", productName, date);
-        String log = String.format("Select * from orders where id not in (Select id from order_details \n" +
-                "where product_name = '%s') and order_date = '%s'\n\n", productName, date);
-
-        FileOutputStreamUtil.fileOutputStream(log);
 
         return order.stream().map(orders -> modelMapper.map(orders, OrderDto.class))
                 .collect(Collectors.toList());
+    }
+
+    private String getNewCode() {
+        try {
+            String code = restTemplate.getForObject("http://mongoService:8040/number/getNumber", String.class);
+            log.debug("Successfully retrieved new code: {}", code);
+            return code;
+        } catch (Exception ex) {
+            log.error("Failed to retrieve new code from mongo service", ex);
+            throw ex;
+        }
+    }
+
+    private OffsetDateTime getDateNow() {
+        try {
+            OffsetDateTime dateTime = restTemplate.getForObject("http://mongoService:8040/number/getDate",
+                    OffsetDateTime.class);
+            log.debug("Successfully retrieved date: {}", dateTime);
+            return dateTime;
+        } catch (Exception ex) {
+            log.error("Failed to retrieve date from mongo service", ex);
+            throw ex;
+        }
+    }
+
+    private boolean isCodeUnique(String code) {
+        return !orderRepository.existsByOrderNumber(code);
     }
 }
