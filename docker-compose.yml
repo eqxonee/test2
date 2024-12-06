@@ -30,7 +30,7 @@ services:
   mongoService:
     build:
       context: /Users/airm1/IdeaProjects/mongoService
-      dockerfile: DockerfileMongoService
+      dockerfile: Dockerfile
     image: mongo-service
     container_name: mongo-service
     ports:

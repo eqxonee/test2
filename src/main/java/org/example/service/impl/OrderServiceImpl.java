@@ -3,6 +3,7 @@ package org.example.service.impl;
 import com.example.generated.model.OrderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.model.Number;
 import org.example.model.Order;
 import org.example.repository.OrderRepository;
 import org.example.service.OrderService;
@@ -57,13 +58,13 @@ public class OrderServiceImpl implements OrderService {
                 String newCode;
                 boolean isUnique;
                 do {
-                    newCode = getNewCode();
+                    newCode = getRestApi().getNumber();
                     isUnique = isCodeUnique(newCode);
                 } while (!isUnique);
 
                 Order order = modelMapper.map(dto, Order.class);
-                order.setOrderNumber(getNewCode());
-                order.setOrderDate(getDateNow());
+                order.setOrderNumber(getRestApi().getNumber());
+                order.setOrderDate(getRestApi().getOrderDate());
                 orderRepository.save(order);
                 log.debug("successfully saved order\n");
             } catch (RuntimeException ex) {
@@ -115,25 +116,14 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private String getNewCode() {
+    private Number getRestApi() {
         try {
-            String code = restTemplate.getForObject("http://mongoService:8040/number/getNumber", String.class);
-            log.debug("Successfully retrieved new code: {}", code);
-            return code;
+            Number number = restTemplate.getForObject("http://localhost:8040/numbers", Number.class);
+            log.debug("Successfully retrieved new code: {}", number.getNumber());
+            log.debug("Successfully retrieved date: {}", number.getOrderDate());
+            return number;
         } catch (Exception ex) {
-            log.error("Failed to retrieve new code from mongo service", ex);
-            throw ex;
-        }
-    }
-
-    private OffsetDateTime getDateNow() {
-        try {
-            OffsetDateTime dateTime = restTemplate.getForObject("http://mongoService:8040/number/getDate",
-                    OffsetDateTime.class);
-            log.debug("Successfully retrieved date: {}", dateTime);
-            return dateTime;
-        } catch (Exception ex) {
-            log.error("Failed to retrieve date from mongo service", ex);
+            log.error("Failed to retrieve from mongo service", ex);
             throw ex;
         }
     }
