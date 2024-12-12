@@ -3,7 +3,7 @@ package org.example.service;
 import com.example.generated.model.OrderDto;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderService {
@@ -16,7 +16,7 @@ public interface OrderService {
 
     void deleteById(Long id);
 
-    List<OrderDto> getAllByDateAndSum(OffsetDateTime date, BigDecimal sum);
+    List<OrderDto> getAllByDateAndSum(LocalDateTime date, BigDecimal sum);
 
-    List<OrderDto> getAllWithoutProductAndDate(String productName, OffsetDateTime date);
+    List<OrderDto> getAllWithoutProductAndDate(String productName, LocalDateTime date);
 }

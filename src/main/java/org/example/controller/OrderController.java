@@ -2,7 +2,6 @@ package org.example.controller;
 
 import com.example.generated.api.OrdersApi;
 import com.example.generated.model.OrderDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.example.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class OrderController implements OrdersApi {
 
     @Override
     public ResponseEntity<List<OrderDto>> getAllByDateAndSum(OffsetDateTime date, Double sum) {
-        return ResponseEntity.ok(ordersService.getAllByDateAndSum(date, BigDecimal.valueOf(sum)));
+        return ResponseEntity.ok(ordersService.getAllByDateAndSum(date.toLocalDateTime(), BigDecimal.valueOf(sum)));
     }
 
     @Override
@@ -50,6 +49,6 @@ public class OrderController implements OrdersApi {
 
     @Override
     public ResponseEntity<List<OrderDto>> getAllWithoutProductAndDate(String productName, OffsetDateTime date) {
-        return ResponseEntity.ok(ordersService.getAllWithoutProductAndDate(productName, date));
+        return ResponseEntity.ok(ordersService.getAllWithoutProductAndDate(productName, date.toLocalDateTime()));
     }
 }

@@ -11,6 +11,19 @@ services:
       - POSTGRES_USER=java_pas_user
       - POSTGRES_PASSWORD=12345
 
+#  mongodb:
+#    image: mongo:latest
+#    container_name: mongodb
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: root
+#    ports:
+#      - "27017:27017"
+#    depends_on:
+#      - db
+#    volumes:
+#      - mongodb_data:/data/db
+
   app:
     build:
       context: /Users/airm1/IdeaProjects/test2
@@ -27,14 +40,18 @@ services:
       - POSTGRES_PASSWORD=12345
       - DRIVER_CLASS_NAME=org.postgresql.Driver
 
-  mongoService:
-    build:
-      context: /Users/airm1/IdeaProjects/mongoService
-      dockerfile: Dockerfile
-    image: mongo-service
-    container_name: mongo-service
-    ports:
-      - "8040:8040"
-    depends_on:
-      - db
-      - app
+#  mongoService:
+#    build:
+#      context: /Users/airm1/IdeaProjects/mongoService
+#      dockerfile: Dockerfile
+#    image: mongo-service
+#    container_name: mongo-service
+#    ports:
+#      - "8040:8040"
+#    depends_on:
+#      - db
+#      - mongodb
+#      - app
+
+#volumes:
+#  mongodb_data:
