@@ -118,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 
     private Number getRestApi() {
         try {
-            Number number = restTemplate.getForObject("http://localhost:8040/numbers", Number.class);
+            Number number = restTemplate.getForObject("http://mongoService:8040/numbers", Number.class);
             log.debug("Successfully retrieved new code: {}", number.getNumber());
             log.debug("Successfully retrieved date: {}", number.getOrderDate());
             return number;
