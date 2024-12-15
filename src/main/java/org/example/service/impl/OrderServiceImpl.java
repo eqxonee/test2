@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -63,9 +64,10 @@ public class OrderServiceImpl implements OrderService {
                 } while (!isUnique);
 
                 Order order = modelMapper.map(dto, Order.class);
-                order.setOrderNumber(getRestApi().getNumber());
+                order.setOrderNumber(newCode);
                 order.setOrderDate(getRestApi().getOrderDate());
-                orderRepository.save(order);
+
+                checkTypes(order);
                 log.debug("successfully saved order\n");
             } catch (RuntimeException ex) {
                 log.error(ex.getMessage());
@@ -80,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
             Order order = optional.get();
             modelMapper.map(dto, order);
 
-            orderRepository.save(order);
+            checkTypes(order);
         }
     }
 
@@ -126,6 +128,18 @@ public class OrderServiceImpl implements OrderService {
             log.error("Failed to retrieve from mongo service", ex);
             throw ex;
         }
+    }
+
+    private void checkTypes(Order order) {
+        if (!Objects.equals(order.getPaymentType(), "карта") && !Objects.equals(order.getPaymentType(), "наличные")) {
+            throw new RuntimeException("Вы не можете добавить другой тип оплаты, доступно только (карта) и (наличные)");
+        }
+
+        if (!Objects.equals(order.getDeliveryType(), "самовывоз") && !Objects.equals(order.getDeliveryType(), "доставка до двери")) {
+            throw new RuntimeException("Вы не можете добавить другой тип доставки, доступно только (самовывоз) и (доставка до двери)");
+        }
+
+        orderRepository.save(order);
     }
 
     private boolean isCodeUnique(String code) {
