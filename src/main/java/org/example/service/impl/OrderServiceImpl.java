@@ -56,16 +56,15 @@ public class OrderServiceImpl implements OrderService {
         if (dto.getId() == null) {
             //Новая запись
             try {
-                String newCode;
-                boolean isUnique;
-                do {
-                    newCode = getRestApi().getNumber();
-                    isUnique = isCodeUnique(newCode);
-                } while (!isUnique);
+                Number number = generateNumber();
+                String newCode = number.getNumber();
+                if (!isCodeUnique(newCode)) {
+                    throw new RuntimeException("Code duplicated");
+                }
 
                 Order order = modelMapper.map(dto, Order.class);
                 order.setOrderNumber(newCode);
-                order.setOrderDate(getRestApi().getOrderDate());
+                order.setOrderDate(number.getOrderDate());
 
                 checkTypes(order);
                 log.debug("successfully saved order\n");
@@ -118,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Number getRestApi() {
+    private Number generateNumber() {
         try {
             Number number = restTemplate.getForObject("http://mongoService:8040/numbers", Number.class);
             log.debug("Successfully retrieved new code: {}", number.getNumber());
